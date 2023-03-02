@@ -25,6 +25,7 @@ public class ReqresInExtendedTests {
 
         given()
                 .log().uri()
+                .log().body()
                 .contentType(JSON)
                 .body(data)
                 .when()
