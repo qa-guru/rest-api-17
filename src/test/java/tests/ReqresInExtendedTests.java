@@ -13,6 +13,8 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
+import static specs.LoginSpec.loginRequestSpec;
+import static specs.LoginSpec.loginResponseSpec;
 
 
 public class ReqresInExtendedTests {
@@ -151,4 +153,20 @@ public class ReqresInExtendedTests {
                 assertThat(loginResponse.getToken()).isEqualTo("QpwL5tke4Pnpja7X4"));
     }
 
+    @Test
+    void loginWithSpecsTest() {
+        LoginBodyLombokModel loginBody = new LoginBodyLombokModel();
+        loginBody.setEmail("eve.holt@reqres.in");
+        loginBody.setPassword("cityslicka");
+
+        LoginResponseLombokModel loginResponse = given(loginRequestSpec)
+                .body(loginBody)
+                .when()
+                .post("/login")
+                .then()
+                .spec(loginResponseSpec)
+                .extract().as(LoginResponseLombokModel.class);
+
+        assertThat(loginResponse.getToken()).isEqualTo("QpwL5tke4Pnpja7X4");
+    }
 }
