@@ -1,10 +1,11 @@
 package tests;
 
-import model.LoginBodyModel;
-import model.LoginResponseModel;
+import model.lombok.LoginBodyLombokModel;
+import model.lombok.LoginResponseLombokModel;
+import model.pojo.LoginBodyPojoModel;
+import model.pojo.LoginResponsePojoModel;
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.RestAssured.basePath;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.is;
@@ -32,12 +33,12 @@ public class ReqresInExtendedTests {
     }
 
     @Test
-    void loginTest() {
-        LoginBodyModel loginBody = new LoginBodyModel();
+    void loginWithPojoModelTest() {
+        LoginBodyPojoModel loginBody = new LoginBodyPojoModel();
         loginBody.setEmail("eve.holt@reqres.in");
         loginBody.setPassword("cityslicka");
 
-        LoginResponseModel loginResponse = given()
+        LoginResponsePojoModel loginResponse = given()
                 .log().uri()
                 .log().body()
                 .contentType(JSON)
@@ -48,9 +49,31 @@ public class ReqresInExtendedTests {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .extract().as(LoginResponseModel.class);
+                .extract().as(LoginResponsePojoModel.class);
 
 //        assertEquals("QpwL5tke4Pnpja7X4", loginResponse.getToken());
+        assertThat(loginResponse.getToken()).isEqualTo("QpwL5tke4Pnpja7X4");
+    }
+
+    @Test
+    void loginWithLombokModelTest() {
+        LoginBodyLombokModel loginBody = new LoginBodyLombokModel();
+        loginBody.setEmail("eve.holt@reqres.in");
+        loginBody.setPassword("cityslicka");
+
+        LoginResponseLombokModel loginResponse = given()
+                .log().uri()
+                .log().body()
+                .contentType(JSON)
+                .body(loginBody)
+                .when()
+                .post("https://reqres.in/api/login")
+                .then()
+                .log().status()
+                .log().body()
+                .statusCode(200)
+                .extract().as(LoginResponseLombokModel.class);
+
         assertThat(loginResponse.getToken()).isEqualTo("QpwL5tke4Pnpja7X4");
     }
 
