@@ -16,7 +16,6 @@ public class LoginSpec {
     public static RequestSpecification loginRequestSpec = with()
             .filter(withCustomTemplates())
             .log().uri()
-            .log().headers()
             .log().body()
             .contentType(JSON)
             .baseUri("https://reqres.in")
